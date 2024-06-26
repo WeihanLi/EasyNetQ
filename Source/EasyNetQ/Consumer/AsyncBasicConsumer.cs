@@ -21,12 +21,12 @@ internal class AsyncBasicConsumer : AsyncDefaultBasicConsumer, IDisposable
     public AsyncBasicConsumer(
         IServiceProvider serviceResolver,
         ILogger logger,
-        IModel model,
+        IChannel channel,
         Queue queue,
         bool autoAck,
         IEventBus eventBus,
         ConsumeDelegate consumeDelegate
-    ) : base(model)
+    ) : base(channel)
     {
         this.serviceResolver = serviceResolver;
         this.logger = logger;
@@ -58,7 +58,7 @@ internal class AsyncBasicConsumer : AsyncDefaultBasicConsumer, IDisposable
         bool redelivered,
         string exchange,
         string routingKey,
-        IBasicProperties properties,
+        ReadOnlyBasicProperties properties,
         ReadOnlyMemory<byte> body
     )
     {
@@ -104,7 +104,7 @@ internal class AsyncBasicConsumer : AsyncDefaultBasicConsumer, IDisposable
     {
         try
         {
-            return ackStrategy(Model, receivedInfo.DeliveryTag);
+            return ackStrategy(Channel, receivedInfo.DeliveryTag);
         }
         catch (AlreadyClosedException alreadyClosedException)
         {

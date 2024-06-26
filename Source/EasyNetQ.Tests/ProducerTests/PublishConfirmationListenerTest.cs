@@ -11,13 +11,13 @@ public class PublishConfirmationListenerTest
     public PublishConfirmationListenerTest()
     {
         eventBus = new EventBus(Substitute.For<ILogger<EventBus>>());
-        model = Substitute.For<IModel, IRecoverable>();
+        model = Substitute.For<IChannel, IRecoverable>();
         publishConfirmationListener = new PublishConfirmationListener(eventBus);
     }
 
     private readonly EventBus eventBus;
     private readonly PublishConfirmationListener publishConfirmationListener;
-    private readonly IModel model;
+    private readonly IChannel channel;
     private const ulong DeliveryTag = 42;
 
     [Fact]

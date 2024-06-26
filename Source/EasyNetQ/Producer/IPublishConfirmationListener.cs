@@ -12,5 +12,5 @@ public interface IPublishConfirmationListener : IDisposable
     /// </summary>
     /// <param name="model"></param>
     /// <returns>Pending confirmation to wait</returns>
-    IPublishPendingConfirmation CreatePendingConfirmation(IModel model);
+    IPublishPendingConfirmation CreatePendingConfirmation(IChannel channel);
 }

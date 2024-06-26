@@ -9,7 +9,7 @@ public class When_an_action_is_invoked : IDisposable
     public When_an_action_is_invoked()
     {
         persistentConnection = Substitute.For<IPersistentConnection>();
-        channel = Substitute.For<IModel, IRecoverable>();
+        channel = Substitute.For<IChannel, IRecoverable>();
 
         persistentConnection.CreateModel().Returns(channel);
 
@@ -22,7 +22,7 @@ public class When_an_action_is_invoked : IDisposable
 
     private readonly IPersistentChannel persistentChannel;
     private readonly IPersistentConnection persistentConnection;
-    private readonly IModel channel;
+    private readonly IChannel channel;
 
     [Fact]
     public void Should_open_a_channel()

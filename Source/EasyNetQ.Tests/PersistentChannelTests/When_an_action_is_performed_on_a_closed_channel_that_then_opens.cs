@@ -10,7 +10,7 @@ public class When_an_action_is_performed_on_a_closed_channel_that_then_opens
     public When_an_action_is_performed_on_a_closed_channel_that_then_opens()
     {
         var persistentConnection = Substitute.For<IPersistentConnection>();
-        channel = Substitute.For<IModel, IRecoverable>();
+        channel = Substitute.For<IChannel, IRecoverable>();
         var eventBus = new EventBus(Substitute.For<ILogger<EventBus>>());
 
         var shutdownArgs = new ShutdownEventArgs(
@@ -30,7 +30,7 @@ public class When_an_action_is_performed_on_a_closed_channel_that_then_opens
         persistentChannel.InvokeChannelAction(x => x.ExchangeDeclare("MyExchange", "direct"));
     }
 
-    private readonly IModel channel;
+    private readonly IChannel channel;
 
     [Fact]
     public void Should_run_action_on_channel()

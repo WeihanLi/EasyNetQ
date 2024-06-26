@@ -96,7 +96,7 @@ public class InternalConsumer : IInternalConsumer
     private readonly ILogger logger;
 
     private volatile bool disposed;
-    private IModel? model;
+    private IChannel? model;
 
     /// <summary>
     ///     Creates InternalConsumer
@@ -312,7 +312,7 @@ public class InternalConsumer : IInternalConsumer
         Cancelled?.Invoke(this, new InternalConsumerCancelledEventArgs(cancelled, active));
     }
 
-    private static bool IsModelClosedWithSoftError(IModel? model)
+    private static bool IsModelClosedWithSoftError(IChannel? model)
     {
         var closeReason = model?.CloseReason;
         if (closeReason == null) return false;

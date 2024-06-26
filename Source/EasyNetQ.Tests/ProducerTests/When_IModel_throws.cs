@@ -4,9 +4,9 @@ using RabbitMQ.Client.Exceptions;
 
 namespace EasyNetQ.Tests.ProducerTests;
 
-public class When_IModel_throws_because_of_closed_connection : IDisposable
+public class When_IChannel_throws_because_of_closed_connection : IDisposable
 {
-    public When_IModel_throws_because_of_closed_connection()
+    public When_IChannel_throws_because_of_closed_connection()
     {
         mockBuilder = new MockBuilder("host=localhost;timeout=1");
 

@@ -62,10 +62,10 @@ public class When_an_action_is_performed_and_channel_reopens
     public void Should_succeed_after_channel_recreation(Exception exception)
     {
         var persistentConnection = Substitute.For<IPersistentConnection>();
-        var brokenChannel = Substitute.For<IModel, IRecoverable>();
+        var brokenChannel = Substitute.For<IChannel, IRecoverable>();
         brokenChannel.When(x => x.ExchangeDeclare("MyExchange", "direct"))
             .Do(_ => throw exception);
-        var channel = Substitute.For<IModel, IRecoverable>();
+        var channel = Substitute.For<IChannel, IRecoverable>();
         persistentConnection.CreateModel().Returns(_ => brokenChannel, _ => channel);
 
         using var persistentChannel = new PersistentChannel(
@@ -86,7 +86,7 @@ public class When_an_action_is_performed_and_channel_reopens
     public void Should_throw_exception_and_close_channel(Exception exception)
     {
         var persistentConnection = Substitute.For<IPersistentConnection>();
-        var brokenChannel = Substitute.For<IModel, IRecoverable>();
+        var brokenChannel = Substitute.For<IChannel, IRecoverable>();
         brokenChannel.When(x => x.ExchangeDeclare("MyExchange", "direct"))
             .Do(_ => throw exception);
 
@@ -111,7 +111,7 @@ public class When_an_action_is_performed_and_channel_reopens
     {
         var persistentConnection = Substitute.For<IPersistentConnection>();
 
-        var channel = Substitute.For<IModel, IRecoverable>();
+        var channel = Substitute.For<IChannel, IRecoverable>();
         persistentConnection.CreateModel()
             .Returns(
                 _ => throw new BrokerUnreachableException(new Exception("Oops")),
@@ -131,7 +131,7 @@ public class When_an_action_is_performed_and_channel_reopens
     public void Should_fail_when_auth_is_failed()
     {
         var persistentConnection = Substitute.For<IPersistentConnection>();
-        var channel = Substitute.For<IModel, IRecoverable>();
+        var channel = Substitute.For<IChannel, IRecoverable>();
         persistentConnection.CreateModel()
             .Returns(
                 _ => throw new BrokerUnreachableException(new AuthenticationFailureException("Oops")),

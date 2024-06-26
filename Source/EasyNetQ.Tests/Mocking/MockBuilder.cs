@@ -11,9 +11,9 @@ public class MockBuilder : IDisposable
     private readonly IBus bus;
 
     private readonly IBasicProperties basicProperties = new BasicProperties();
-    private readonly Stack<IModel> channelPool = new();
-    private readonly List<IModel> channels = new();
-    private readonly IConnection connection = Substitute.For<IAutorecoveringConnection>();
+    private readonly Stack<IChannel> channelPool = new();
+    private readonly List<IChannel> channels = new();
+    private readonly IConnection connection = Substitute.For<IConnection>();
     private readonly IConnectionFactory connectionFactory = Substitute.For<IConnectionFactory>();
     private readonly List<AsyncDefaultBasicConsumer> consumers = new();
 
@@ -32,7 +32,7 @@ public class MockBuilder : IDisposable
     public MockBuilder(string connectionString, Action<IServiceCollection> registerServices)
     {
         for (var i = 0; i < 10; i++)
-            channelPool.Push(Substitute.For<IModel, IRecoverable>());
+            channelPool.Push(Substitute.For<IChannel, IRecoverable>());
 
         connectionFactory.CreateConnection(Arg.Any<IList<AmqpTcpEndpoint>>()).Returns(connection);
         connection.IsOpen.Returns(true);
@@ -84,11 +84,11 @@ public class MockBuilder : IDisposable
 
     public IConnection Connection => connection;
 
-    public List<IModel> Channels => channels;
+    public List<IChannel> Channels => channels;
 
     public List<AsyncDefaultBasicConsumer> Consumers => consumers;
 
-    public IModel NextModel => channelPool.Peek();
+    public IChannel NextModel => channelPool.Peek();
 
     public IPubSub PubSub => serviceProvider.GetRequiredService<IPubSub>();
 

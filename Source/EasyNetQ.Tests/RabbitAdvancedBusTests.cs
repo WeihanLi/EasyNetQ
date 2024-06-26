@@ -50,7 +50,7 @@ public class RabbitAdvancedBusTests
 
         await mockBuilder.Bus.Advanced.PublishAsync("", "", null, confirmsPerRequest, new Message<object>(null));
 
-        xxx.Received(expected).CreatePendingConfirmation(Arg.Any<IModel>());
+        xxx.Received(expected).CreatePendingConfirmation(Arg.Any<IChannel>());
         mockBuilder.Channels[0].Received().BasicPublish(
             Arg.Any<string>(),
             Arg.Any<string>(),

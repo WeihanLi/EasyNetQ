@@ -6,7 +6,7 @@ namespace EasyNetQ.Consumer;
 /// <summary>
 ///     Represents a strategy of a message's acknowledgment
 /// </summary>
-public delegate AckResult AckStrategy(IModel model, ulong deliveryTag);
+public delegate AckResult AckStrategy(IChannel channel, ulong deliveryTag);
 
 /// <summary>
 ///     Various strategies of a message's acknowledgment

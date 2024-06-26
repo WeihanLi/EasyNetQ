@@ -117,7 +117,7 @@ public class DefaultConsumeErrorStrategy : IConsumeErrorStrategy
     public virtual ValueTask<AckStrategy> HandleCancelledAsync(ConsumeContext context) => new(AckStrategies.NackWithRequeue);
 
     private static void DeclareAndBindErrorExchangeWithErrorQueue(
-        IModel model,
+        IChannel channel,
         string exchangeName,
         string exchangeType,
         string queueName,
@@ -136,7 +136,7 @@ public class DefaultConsumeErrorStrategy : IConsumeErrorStrategy
         model.QueueBind(queueName, exchangeName, routingKey);
     }
 
-    private string DeclareErrorExchangeWithQueue(IModel model, MessageReceivedInfo receivedInfo)
+    private string DeclareErrorExchangeWithQueue(IChannel channel, MessageReceivedInfo receivedInfo)
     {
         var errorExchangeName = conventions.ErrorExchangeNamingConvention(receivedInfo);
         var errorExchangeType = conventions.ErrorExchangeTypeConvention();

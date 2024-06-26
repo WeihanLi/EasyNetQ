@@ -664,11 +664,11 @@ public class RabbitAdvancedBus : IAdvancedBus, IDisposable
             this.body = body;
         }
 
-        public bool Invoke(IModel model)
+        public bool Invoke(IChannel channel)
         {
-            var basicProperties = model.CreateBasicProperties();
+            var basicProperties = channel.CreateBasicProperties();
             properties.CopyTo(basicProperties);
-            model.BasicPublish(exchange, routingKey, mandatory, basicProperties, body);
+            channel.BasicPublishAsync(exchange, routingKey, mandatory, basicProperties, body);
             return true;
         }
     }
@@ -699,14 +699,14 @@ public class RabbitAdvancedBus : IAdvancedBus, IDisposable
             this.body = body;
         }
 
-        public IPublishPendingConfirmation Invoke(IModel model)
+        public IPublishPendingConfirmation Invoke(IChannel channel)
         {
             var confirmation = confirmationListener.CreatePendingConfirmation(model);
-            var basicProperties = model.CreateBasicProperties();
+            var basicProperties = channel.CreateBasicProperties();
             properties.SetConfirmationId(confirmation.Id).CopyTo(basicProperties);
             try
             {
-                model.BasicPublish(exchange, routingKey, mandatory, basicProperties, body);
+                channel.BasicPublish(exchange, routingKey, mandatory, basicProperties, body);
             }
             catch (Exception)
             {

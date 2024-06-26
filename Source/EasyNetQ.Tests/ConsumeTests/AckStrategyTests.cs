@@ -8,12 +8,12 @@ public class Ack_strategy
 {
     public Ack_strategy()
     {
-        model = Substitute.For<IModel, IRecoverable>();
+        model = Substitute.For<IChannel, IRecoverable>();
 
         result = AckStrategies.Ack(model, deliveryTag);
     }
 
-    private readonly IModel model;
+    private readonly IChannel channel;
     private readonly AckResult result;
     private const ulong deliveryTag = 1234;
 
@@ -34,12 +34,12 @@ public class NackWithoutRequeue_strategy
 {
     public NackWithoutRequeue_strategy()
     {
-        model = Substitute.For<IModel, IRecoverable>();
+        model = Substitute.For<IChannel, IRecoverable>();
 
         result = AckStrategies.NackWithoutRequeue(model, deliveryTag);
     }
 
-    private readonly IModel model;
+    private readonly IChannel channel;
     private readonly AckResult result;
     private const ulong deliveryTag = 1234;
 
@@ -60,12 +60,12 @@ public class NackWithRequeue_strategy
 {
     public NackWithRequeue_strategy()
     {
-        model = Substitute.For<IModel, IRecoverable>();
+        model = Substitute.For<IChannel, IRecoverable>();
 
         result = AckStrategies.NackWithRequeue(model, deliveryTag);
     }
 
-    private readonly IModel model;
+    private readonly IChannel channel;
     private readonly AckResult result;
     private const ulong deliveryTag = 1234;
 

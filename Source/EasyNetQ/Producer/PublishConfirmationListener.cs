@@ -31,7 +31,7 @@ public class PublishConfirmationListener : IPublishConfirmationListener
     }
 
     /// <inheritdoc />
-    public IPublishPendingConfirmation CreatePendingConfirmation(IModel model)
+    public IPublishPendingConfirmation CreatePendingConfirmation(IChannel channel)
     {
         var sequenceNumber = model.NextPublishSeqNo;
 

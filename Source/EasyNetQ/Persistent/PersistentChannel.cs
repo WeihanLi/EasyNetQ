@@ -23,7 +23,7 @@ public class PersistentChannel : IPersistentChannel
     private readonly PersistentChannelOptions options;
     private readonly ILogger<PersistentChannel> logger;
 
-    private volatile IModel? initializedChannel;
+    private volatile IChannel? initializedChannel;
     private volatile bool disposed;
 
     /// <summary>
@@ -141,7 +141,7 @@ public class PersistentChannel : IPersistentChannel
         }
     }
 
-    private IModel CreateChannel()
+    private IChannel CreateChannel()
     {
         var channel = connection.CreateModel();
         AttachChannelEvents(channel);
@@ -159,7 +159,7 @@ public class PersistentChannel : IPersistentChannel
         channel.Dispose();
     }
 
-    private void AttachChannelEvents(IModel channel)
+    private void AttachChannelEvents(IChannel channel)
     {
         if (options.PublisherConfirms)
         {
@@ -178,7 +178,7 @@ public class PersistentChannel : IPersistentChannel
             throw new NotSupportedException("Non-recoverable channel is not supported");
     }
 
-    private void DetachChannelEvents(IModel channel)
+    private void DetachChannelEvents(IChannel channel)
     {
         if (channel is IRecoverable recoverable)
             recoverable.Recovery -= OnChannelRecovered;
@@ -195,12 +195,12 @@ public class PersistentChannel : IPersistentChannel
 
     private void OnChannelRecovered(object? sender, EventArgs e)
     {
-        eventBus.Publish(new ChannelRecoveredEvent((IModel)sender!));
+        eventBus.Publish(new ChannelRecoveredEvent((IChannel)sender!));
     }
 
     private void OnChannelShutdown(object? sender, ShutdownEventArgs e)
     {
-        eventBus.Publish(new ChannelShutdownEvent((IModel)sender!));
+        eventBus.Publish(new ChannelShutdownEvent((IChannel)sender!));
     }
 
     private void OnReturn(object? sender, BasicReturnEventArgs args)
@@ -208,7 +208,7 @@ public class PersistentChannel : IPersistentChannel
         var messageProperties = new MessageProperties(args.BasicProperties);
         var messageReturnedInfo = new MessageReturnedInfo(args.Exchange, args.RoutingKey, args.ReplyText);
         var @event = new ReturnedMessageEvent(
-            (IModel)sender!,
+            (IChannel)sender!,
             args.Body,
             messageProperties,
             messageReturnedInfo
@@ -218,12 +218,12 @@ public class PersistentChannel : IPersistentChannel
 
     private void OnAck(object? sender, BasicAckEventArgs args)
     {
-        eventBus.Publish(MessageConfirmationEvent.Ack((IModel)sender!, args.DeliveryTag, args.Multiple));
+        eventBus.Publish(MessageConfirmationEvent.Ack((IChannel)sender!, args.DeliveryTag, args.Multiple));
     }
 
     private void OnNack(object? sender, BasicNackEventArgs args)
     {
-        eventBus.Publish(MessageConfirmationEvent.Nack((IModel)sender!, args.DeliveryTag, args.Multiple));
+        eventBus.Publish(MessageConfirmationEvent.Nack((IChannel)sender!, args.DeliveryTag, args.Multiple));
     }
 
     private static ExceptionVerdict GetExceptionVerdict(Exception exception)

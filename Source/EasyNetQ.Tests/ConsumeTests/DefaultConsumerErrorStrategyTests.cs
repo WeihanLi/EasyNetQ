@@ -11,7 +11,7 @@ public class DefaultConsumerErrorStrategyTests
     public async Task Should_enable_publisher_confirm_when_configured_and_return_ack_when_confirm_received()
     {
         var persistedConnectionMock = Substitute.For<IConsumerConnection>();
-        var modelMock = Substitute.For<IModel>();
+        var modelMock = Substitute.For<IChannel>();
         modelMock.WaitForConfirms(Arg.Any<TimeSpan>()).Returns(true);
         persistedConnectionMock.CreateModel().Returns(modelMock);
         var consumerErrorStrategy = CreateConsumerErrorStrategy(persistedConnectionMock, true);
@@ -30,7 +30,7 @@ public class DefaultConsumerErrorStrategyTests
         Should_enable_publisher_confirm_when_configured_and_return_nack_with_requeue_when_no_confirm_received()
     {
         var persistedConnectionMock = Substitute.For<IConsumerConnection>();
-        var modelMock = Substitute.For<IModel>();
+        var modelMock = Substitute.For<IChannel>();
         modelMock.WaitForConfirms(Arg.Any<TimeSpan>()).Returns(false);
         persistedConnectionMock.CreateModel().Returns(modelMock);
         var consumerErrorStrategy = CreateConsumerErrorStrategy(persistedConnectionMock, true);
@@ -48,7 +48,7 @@ public class DefaultConsumerErrorStrategyTests
     public async Task Should_not_enable_publisher_confirm_when_not_configured_and_return_ack_when_no_confirm_received()
     {
         var persistedConnectionMock = Substitute.For<IConsumerConnection>();
-        var modelMock = Substitute.For<IModel>();
+        var modelMock = Substitute.For<IChannel>();
         modelMock.WaitForConfirms(Arg.Any<TimeSpan>()).Returns(false);
         persistedConnectionMock.CreateModel().Returns(modelMock);
         var consumerErrorStrategy = CreateConsumerErrorStrategy(persistedConnectionMock);

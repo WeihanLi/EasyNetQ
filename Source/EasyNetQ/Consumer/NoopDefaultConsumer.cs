@@ -9,7 +9,7 @@ internal sealed class NoopDefaultConsumer : IBasicConsumer, IAsyncBasicConsumer
 
     private NoopDefaultConsumer() { }
 
-    public IModel Model => throw new NotSupportedException();
+    public IChannel Channel => throw new NotSupportedException();
 
     event AsyncEventHandler<ConsumerEventArgs> IAsyncBasicConsumer.ConsumerCancelled
     {
@@ -35,20 +35,21 @@ internal sealed class NoopDefaultConsumer : IBasicConsumer, IAsyncBasicConsumer
     {
     }
 
-    void IBasicConsumer.HandleBasicDeliver(
+    Task IBasicConsumer.HandleBasicDeliverAsync(
         string consumerTag,
         ulong deliveryTag,
         bool redelivered,
         string exchange,
         string routingKey,
-        IBasicProperties properties,
+        ReadOnlyBasicProperties properties,
         ReadOnlyMemory<byte> body
     )
     {
+        return Task.CompletedTask;
     }
 
 
-    void IBasicConsumer.HandleModelShutdown(object model, ShutdownEventArgs reason)
+    void IBasicConsumer.HandleChannelShutdown(object model, ShutdownEventArgs reason)
     {
     }
 
@@ -64,9 +65,9 @@ internal sealed class NoopDefaultConsumer : IBasicConsumer, IAsyncBasicConsumer
         bool redelivered,
         string exchange,
         string routingKey,
-        IBasicProperties properties,
+        ReadOnlyBasicProperties properties,
         ReadOnlyMemory<byte> body
     ) => Task.CompletedTask;
 
-    Task IAsyncBasicConsumer.HandleModelShutdown(object model, ShutdownEventArgs reason) => Task.CompletedTask;
+    Task IAsyncBasicConsumer.HandleChannelShutdown(object model, ShutdownEventArgs reason) => Task.CompletedTask;
 }
